@@ -17,23 +17,40 @@
 </template>
 
 <script>
+
+import axios from 'axios';
+
 export default {
   data() {
     return {
-    email: '',
-    password: '',
+      email: '',
+      password: '',
     };
   },
   methods: {
-    login() {
-      // Handle login logic here
-      alert(`connecté en tant que ${this.email}`);
+    async login() {
+      try {
+        const response = await axios.post('http://localhost:3000/api/login', {
+          email: this.email,
+          password: this.password,
+        });
+
+        if (response.data.status === 'ok') {
+          alert('Connecté•e en tant que ${this.email}');
+          // Handle successful login, e.g., save token, redirect, etc.
+        } else {
+          alert('Non connecté•e');
+        }
+      } catch (error) {
+        console.error('Une erreur est survenue lors de la connexion:', error);
+      }
     },
     goToPasswordRecovery() {
       this.$router.push('/password-recovery');
     },
   },
 };
+
 </script>
 
 <style scoped>
