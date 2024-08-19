@@ -98,7 +98,6 @@ button {
   &:hover {
     background-color: cadetblue;
   }
-
 }
 
 </style>
