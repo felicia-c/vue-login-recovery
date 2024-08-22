@@ -37,13 +37,13 @@ export default {
         });
 
         if (response.data.status === 'ok') {
-          alert('Connecté•e en tant que ${this.email}');
+          alert(`Connecté•e en tant que ${this.email}`);
           // Handle successful login, e.g., save token, redirect, etc.
         } else {
-          alert('Non connecté•e');
+          alert(`Non connecté•e`);
         }
       } catch (error) {
-        console.error('Une erreur est survenue lors de la connexion:', error);
+        console.error(`Une erreur est survenue lors de la connexion:`, error);
       }
     },
     goToPasswordRecovery() {

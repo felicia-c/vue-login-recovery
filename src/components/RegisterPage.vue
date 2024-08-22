@@ -35,13 +35,13 @@ export default {
         });
 
         if (response.data.status === 'ok') {
-          alert('Inscription réussie ! Veuillez vous connecter.');
+          alert(`Inscription réussie ! Veuillez vous connecter.`);
           this.$router.push('/login');
         } else {
-          alert('L\'inscription a échoué : ' + response.data.error);
+          alert(`L'inscription a échoué : ` + response.data.error);
         }
       } catch (error) {
-        console.error('Il y a eu une erreur lors de l\'inscription:', error);
+        console.error(`Il y a eu une erreur lors de l'inscription:`, error);
       }
     },
     goToLogin() {
