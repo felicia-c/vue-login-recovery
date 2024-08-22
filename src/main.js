@@ -1,13 +1,14 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginPage from './components/LoginPage.vue';
+import Login from './components/LoginPage.vue';
 import PasswordRecovery from './components/PasswordRecovery.vue';
+import Register from './components/RegisterPage.vue';
 
-// Define your routes
 const routes = [
-    { path: '/login', component: LoginPage },
+    { path: '/login', component: Login },
     { path: '/password-recovery', component: PasswordRecovery },
+    { path: '/register', component: Register },
     { path: '/:pathMatch(.*)*', redirect: '/login' }, // Redirect all other paths to login
 ];
 

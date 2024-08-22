@@ -1,24 +1,22 @@
 <template>
-  <div class="login-container">
-    <h2>Connexion</h2>
-    <form @submit.prevent="login">
+  <div class="register-container">
+    <h2>Register</h2>
+    <form @submit.prevent="register">
       <div>
-        <label for="email">Email</label>
+        <label for="email">Email:</label>
         <input v-model="email" type="email" id="email" required />
       </div>
       <div>
-        <label for="password">Mot de passe</label>
+        <label for="password">Password:</label>
         <input v-model="password" type="password" id="password" required />
       </div>
-      <button type="submit">C'est parti !</button>
+      <button type="submit">S'inscrire</button>
     </form>
-    <p @click="goToPasswordRecovery" class="forgot-password">Mot de passe oublié ?</p>
-    <p @click="goToRegister" class="register">Créer un compte</p>
+    <p @click="goToLogin" class="back-to-login">Déjà enregistré ? Connectez-vous ici</p>
   </div>
 </template>
 
 <script>
-
 import axios from 'axios';
 
 export default {
@@ -29,52 +27,45 @@ export default {
     };
   },
   methods: {
-    async login() {
+    async register() {
       try {
-        const response = await axios.post('http://localhost:3000/api/login', {
+        const response = await axios.post('http://localhost:3000/api/register', {
           email: this.email,
           password: this.password,
         });
 
         if (response.data.status === 'ok') {
-          alert('Connecté•e en tant que ${this.email}');
-          // Handle successful login, e.g., save token, redirect, etc.
+          alert('Inscription réussie ! Veuillez vous connecter.');
+          this.$router.push('/login');
         } else {
-          alert('Non connecté•e');
+          alert('L\'inscription a échoué : ' + response.data.error);
         }
       } catch (error) {
-        console.error('Une erreur est survenue lors de la connexion:', error);
+        console.error('Il y a eu une erreur lors de l\'inscription:', error);
       }
     },
-    goToPasswordRecovery() {
-      this.$router.push('/password-recovery');
-    },
-    goToRegister() {
-      this.$router.push('/register');
+    goToLogin() {
+      this.$router.push('/login');
     },
   },
 };
-
 </script>
 
 <style scoped>
-.login-container {
-  max-width: 420px;
+.register-container {
+  max-width: 400px;
   margin: auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  /* display: inline-block; */
 }
-.forgot-password, .register {
+
+.back-to-login {
   color: lightslategray;
   cursor: pointer;
   margin-top: 10px;
-
-  &:hover {
-    color: cadetblue;
-  }
 }
+
 form > div {
   margin-bottom: 25px;
   display: flex;
@@ -103,5 +94,4 @@ button {
     background-color: cadetblue;
   }
 }
-
 </style>
