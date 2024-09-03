@@ -1,6 +1,12 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+
+    <nav>
+      <router-link to="/login">Login</router-link>
+      <router-link to="/register">Register</router-link>
+      <router-link to="/users">User List</router-link> <!-- Add a link to the user list -->
+    </nav>
+    <router-view />
   </div>
 </template>
 
@@ -18,5 +24,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+nav {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 </style>

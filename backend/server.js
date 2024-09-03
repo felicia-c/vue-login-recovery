@@ -1,72 +1,38 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 const cors = require('cors');
+
+// Load environment variables from .env file (if using dotenv)
+require('dotenv').config();
+
+// Import routes
+const userLogin = require('./routes/login');
+const passwordResetRoutes = require('./routes/passwordReset');
+const userRoutes = require('./routes/userRoutes');
+const userRegister = require('./routes/register');
+
 
 const app = express();
 
 // Middleware
-app.use(express.json());
-app.use(cors());
+app.use(cors()); // Enable CORS for all requests
+app.use(bodyParser.json()); // Parse incoming JSON requests
+app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded data
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/vue-auth')
-    .then(() => {
-        console.log('Connected to MongoDB');
-    })
-    .catch((error) => {
-        console.error('Error connecting to MongoDB:', error);
-    });
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/vue-auth-app')
+    .then(() => console.log('MongoDB connected...'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
-const UserSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-});
+// Use routes
+app.use(userLogin); // Routes for user login
+app.use(passwordResetRoutes); // Routes for password reset
+app.use(userRoutes); // Routes for user management
+app.use(userRegister); // Routes for register new user
 
-const User = mongoose.model('User', UserSchema);
-
-// Register Route
-app.post('/api/register', async (req, res) => {
-    const { email, password } = req.body;
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    try {
-        const user = await User.create({ email, password: hashedPassword });
-        res.json({ status: 'ok', user });
-    } catch (error) {
-        res.json({ status: 'error', error: 'Duplicate email' });
-    }
-});
-
-// Login Route
-app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-
-    if (!user) {
-        return res.json({ status: 'error', error: 'Invalid login' });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (isPasswordValid) {
-        const token = jwt.sign(
-            { email: user.email },
-            'secret123'
-        );
-        return res.json({ status: 'ok', user: token });
-    } else {
-        return res.json({ status: 'error', user: false });
-    }
-});
-
-// Password Recovery Route
-// (Implement logic for sending recovery email or resetting the password here)
-
-app.listen(3000, () => {
-    console.log('Server started on http://localhost:3000');
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

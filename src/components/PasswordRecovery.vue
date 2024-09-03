@@ -6,23 +6,38 @@
         <label for="email">Email:</label>
         <input v-model="email" type="email" id="email" required />
       </div>
-      <button type="submit">Envoyer</button>
+      <button type="submit">Envoyer un lien de récupération</button>
     </form>
-    <p @click="goBackToLogin" class="back-to-login">Retour</p>
+    <p v-if="message" class="message">{{ message }}</p>
+    <p v-if="error" class="error">{{ error }}</p>
+    <p @click="goBackToLogin" class="back-to-login">Connexion</p>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      email: '',
+      email: '',  // User's email input
+      message: '', // Success message after requesting password reset
+      error: '',   // Error message if request fails
     };
   },
   methods: {
-    recoverPassword() {
-      // Handle password recovery logic here
-      alert(`Un email a été envoyé à l'adresse suivante: ${this.email}`);
+    async recoverPassword() {
+      try {
+        // eslint-disable-next-line
+        const response = await axios.post('http://localhost:3000/api/request-password-reset', { email: this.email });
+        this.message = `Un e-mail à été envoyé à ${this.email} avec la procédure à suivre.`;
+        this.error = '';  // Clear any previous error message
+      } catch (error) {
+        this.message = ''; // Clear any previous success message
+        this.error = error.response && error.response.data && error.response.data.message
+            ? error.response.data.message
+            : 'Une erreur est survenue. Veuillez réessayer.';
+      }
     },
     goBackToLogin() {
       this.$router.push('/login');
@@ -30,7 +45,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .recovery-container {
   max-width: 400px;

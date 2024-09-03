@@ -1,24 +1,24 @@
 <template>
   <div class="login-container">
     <h2>Connexion</h2>
-    <form @submit.prevent="login">
+    <form @submit.prevent="loginUser">
       <div>
-        <label for="email">Email</label>
+        <label for="email">Email:</label>
         <input v-model="email" type="email" id="email" required />
       </div>
       <div>
-        <label for="password">Mot de passe</label>
+        <label for="password">Mot de passe :</label>
         <input v-model="password" type="password" id="password" required />
       </div>
-      <button type="submit">C'est parti !</button>
+      <button type="submit">Connexion</button>
     </form>
+    <p v-if="error" class="error">{{ error }}</p>
     <p @click="goToPasswordRecovery" class="forgot-password">Mot de passe oublié ?</p>
-    <p @click="goToRegister" class="register">Créer un compte</p>
+    <p @click="goToRegister" class="register-link">Créer un compte</p>
   </div>
 </template>
 
 <script>
-
 import axios from 'axios';
 
 export default {
@@ -26,36 +26,38 @@ export default {
     return {
       email: '',
       password: '',
+      error: '',
     };
   },
   methods: {
-    async login() {
+    async loginUser() {
       try {
         const response = await axios.post('http://localhost:3000/api/login', {
           email: this.email,
           password: this.password,
         });
-
-        if (response.data.status === 'ok') {
-          alert(`Connecté•e en tant que ${this.email}`);
-          // Handle successful login, e.g., save token, redirect, etc.
-        } else {
-          alert(`Non connecté•e`);
-        }
+        // Assuming you receive a token and user data in the response
+        localStorage.setItem('token', response.data.token);
+        this.error = '';
+        alert(`Connecté•e en tant que ${this.email}`);
+        // Handle successful login, e.g., save token, redirect, etc.
+        this.$router.push('/users'); // Redirect to dashboard or some other page
       } catch (error) {
-        console.error(`Une erreur est survenue lors de la connexion:`, error);
+        this.error = error.response && error.response.data && error.response.data.message
+            ? error.response.data.message
+            : 'Une erreur est survenue. Veuillez réessayer.';
       }
-    },
-    goToPasswordRecovery() {
-      this.$router.push('/password-recovery');
     },
     goToRegister() {
       this.$router.push('/register');
     },
+    goToPasswordRecovery() {
+      this.$router.push('/password-recovery');
+    },
   },
 };
-
 </script>
+
 
 <style scoped>
 .login-container {
@@ -64,9 +66,9 @@ export default {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  /* display: inline-block; */
 }
-.forgot-password, .register {
+.forgot-password,
+.register-link {
   color: lightslategray;
   cursor: pointer;
   margin-top: 10px;

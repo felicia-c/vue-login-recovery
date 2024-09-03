@@ -15,6 +15,7 @@
     - [Mongoose](https://mongoosejs.com/)
     - [Bcrypt.js](https://www.npmjs.com/package/bcryptjs)
     - [JSON Web Token (JWT)](https://jwt.io/)
+    - [nodemailer](https://nodemailer.com/)
 
 ## 📝 Installation
 
@@ -49,6 +50,13 @@ JWT_SECRET=your_jwt_secret
 
 # Server port
 PORT=3000
+
+#Password reset email
+PASSWORD_RESET_SENDER=passwordreset@yourdomain.com
+
+#Nodemailer credentials (gmail account credentials)
+YOUR_EMAIL=your-email@gmail.com
+YOUR_EMAIL_PWD=your-email-password
 ```
 ### Start the Application
 #### Start the Backend Server

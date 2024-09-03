@@ -1,3 +1,4 @@
+<!--
 <template>
   <div class="register-container">
     <h2>Register</h2>
@@ -42,6 +43,74 @@ export default {
         }
       } catch (error) {
         console.error(`Il y a eu une erreur lors de l'inscription:`, error);
+      }
+    },
+    goToLogin() {
+      this.$router.push('/login');
+    },
+  },
+};
+</script>
+-->
+<template>
+  <div class="register-container">
+    <h2>Inscription</h2>
+    <form @submit.prevent="registerUser">
+      <div>
+        <label for="email">Email:</label>
+        <input v-model="email" type="email" id="email" required />
+      </div>
+      <div>
+        <label for="password">Mot de passe:</label>
+        <input v-model="password" type="password" id="password" required />
+      </div>
+      <div>
+        <label for="confirmPassword">Confirmer le mot de passe:</label>
+        <input v-model="confirmPassword" type="password" id="confirmPassword" required />
+      </div>
+      <button type="submit">Inscription</button>
+    </form>
+    <p v-if="message" class="message">{{ message }}</p>
+    <p v-if="error" class="error">{{ error }}</p>
+    <p @click="goToLogin" class="back-to-login">Déjà enregistré ? Connectez-vous ici</p>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+      confirmPassword: '',
+      message: '',
+      error: '',
+    };
+  },
+  methods: {
+    async registerUser() {
+      if (this.password !== this.confirmPassword) {
+        this.error = "Passwords do not match.";
+        return;
+      }
+
+      try {
+        // eslint-disable-next-line
+        const response = await axios.post('http://localhost:3000/api/register', {
+          email: this.email,
+          password: this.password,
+        });
+        this.message = "Registration successful. Please log in.";
+        this.error = '';
+      } catch (error) {
+        this.message = '';
+        this.error = error.response && error.response.data && error.response.data.message
+            ? error.response.data.message
+            : 'Error registering user. Please try again.';
+
+        console.error('Error in RegisterPage:', error);
       }
     },
     goToLogin() {
