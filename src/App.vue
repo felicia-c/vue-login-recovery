@@ -7,7 +7,10 @@
         <!-- Show "Log in" if the user is not logged in -->
         <router-link v-if="!authState.isLoggedIn" to="/login" class="login">Connexion</router-link>
         <!-- Show "Log out" if the user is logged in -->
-        <button v-if="authState.isLoggedIn" @click="logout" class="logout">Se déconnecter</button>
+        <div v-if="authState.isLoggedIn">
+        <button @click="logout" class="logout">Se déconnecter</button>
+          <p class="username">Bienvenue <b>{{ authState.user.username }}</b> !</p>
+        </div>
       </div>
     </nav>
     <router-view />
@@ -29,7 +32,13 @@ export default {
     logout() {
       // Remove the token from localStorage to log the user out
       localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('email');
+
       authState.isLoggedIn = false; // Update the reactive state
+      authState.user.username = '';
+      authState.user.email = '';
+
       this.$router.push('/login'); // Redirect to the login page
     }
   }

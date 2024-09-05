@@ -37,12 +37,18 @@ export default {
           email: this.email,
           password: this.password,
         });
-        // Assuming you receive a token and user data in the response
+        // Store token and username in localStorage
         localStorage.setItem('token', response.data.token);
-        authState.isLoggedIn = true; // Update the reactive login state
+        localStorage.setItem('username', response.data.user.username);
+        localStorage.setItem('email', response.data.user.email);
+
+        // Update the reactive login state
+        authState.isLoggedIn = true;
+        authState.user.username = response.data.user.username;
+        authState.user.email = response.data.user.email;
+
         this.error = '';
         alert(`Connecté•e en tant que ${this.email}`);
-        // Handle successful login, e.g., save token, redirect, etc.
         this.$router.push('/users'); // Redirect to dashboard or some other page
       } catch (error) {
         this.error = error.response && error.response.data && error.response.data.message
