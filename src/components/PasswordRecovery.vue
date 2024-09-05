@@ -76,17 +76,4 @@ input {
   padding: 8px 2px;
   display: inline-block;
 }
-
-button {
-  border: none;
-  background-color: lightslategray;
-  padding: 15px 30px;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background-color ease-in-out 1s;
-  &:hover {
-    background-color: cadetblue;
-  }
-}
 </style>
