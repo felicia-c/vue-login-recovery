@@ -54,7 +54,8 @@ PORT=3000
 #Password reset email
 PASSWORD_RESET_SENDER=passwordreset@yourdomain.com
 
-#Nodemailer credentials (gmail account credentials)
+#Nodemailer credentials (mail client account credentials)
+EMAIL_SERVICE='Gmail'
 YOUR_EMAIL=your-email@gmail.com
 YOUR_EMAIL_PWD=your-email-password
 ```
