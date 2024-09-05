@@ -71,11 +71,26 @@ nav {
     padding-bottom: 0.3rem;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid transparent;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: cadetblue;
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
     &:hover {
       color: cadetblue;
-      border-color: cadetblue;
-      transition: color 0.3s ease-in-out;
+      &::before {
+        transform: scaleX(1);
+      }
     }
 
     &.router-link-active:not(.login) {
@@ -84,7 +99,9 @@ nav {
       font-size: 1.2rem;
       cursor: default;
       &:hover {
-        border-color: transparent;
+        &::before {
+          transform: scaleX(0);
+        }
       }
     }
   }
