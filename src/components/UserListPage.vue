@@ -119,14 +119,13 @@ input {
   padding:5px 10px;
   border: none;
   border-bottom: 1px solid lightslategray;
+  color: lightslategray;
 }
 button {
+
   margin-left: 10px;
   padding: 5px 10px;
-  background-color: lightslategray;
-  color: white;
-  border: none;
-  cursor: pointer;
+  font-size: 0.8rem;
 }
 button:hover {
   background-color: cadetblue;

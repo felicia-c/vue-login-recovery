@@ -20,7 +20,7 @@
       </div>
       <button type="submit">Inscription</button>
     </form>
-    <p v-if="message" class="message">{{ message }}</p>
+    <p v-if="success" class="success">{{ success }}</p>
     <p v-if="error" class="error">{{ error }}</p>
     <p @click="goToLogin" class="back-to-login">Déjà enregistré ? Connectez-vous ici</p>
   </div>
@@ -36,7 +36,7 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
-      message: '',
+      success: '',
       error: '',
     };
   },
@@ -54,10 +54,10 @@ export default {
           email: this.email,
           password: this.password,
         });
-        this.message = "Inscritption réussie ! Veuillez vous connecter.";
+        this.success = "Inscritption réussie ! Veuillez vous connecter.";
         this.error = '';
       } catch (error) {
-        this.message = '';
+        this.success = '';
         this.error = error.response && error.response.data && error.response.data.message
             ? error.response.data.message
             : 'Une erreur est survenue. Veuillez réessayer.';
@@ -103,14 +103,16 @@ input {
   display: inline-block;
 }
 
-.message {
-  background-color: darkseagreen;
+.success {
+  background-color: lightgoldenrodyellow;
   color: green;
   margin-top: 10px;
   padding: 15px 20px;
 }
 .error {
+  background-color: pink;
   color: red;
   margin-top: 10px;
+  padding: 15px 20px;
 }
 </style>

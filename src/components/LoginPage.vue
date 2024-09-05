@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { authState } from '../auth'; // Import the reactive login state
 import axios from 'axios';
 
 export default {
@@ -38,6 +39,7 @@ export default {
         });
         // Assuming you receive a token and user data in the response
         localStorage.setItem('token', response.data.token);
+        authState.isLoggedIn = true; // Update the reactive login state
         this.error = '';
         alert(`Connecté•e en tant que ${this.email}`);
         // Handle successful login, e.g., save token, redirect, etc.
@@ -93,4 +95,10 @@ input {
   display: inline-block;
 }
 
+.error {
+  background-color: pink;
+  color: red;
+  margin-top: 10px;
+  padding: 15px 20px;
+}
 </style>
