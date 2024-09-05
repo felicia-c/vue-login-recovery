@@ -20,7 +20,11 @@
         </div>
         <div v-else class="user-datas">
           <span><b>{{ user.username }}</b> - {{ user.email }}</span>
-          <button @click="editUser(user)">Edit</button>
+          <span>
+            <button @click="editUser(user)" class="edit">Modifier</button>
+            <button @click="confirmDelete(user)" class="delete">Supprimer</button>
+          </span>
+
         </div>
       </li>
     </ul>
@@ -82,6 +86,22 @@ export default {
       this.editingUser = null; // Cancel edit mode
       this.userEdit = { username: '', email: '' }; // Reset the edit form
       this.fetchUsers(); // Re-fetch users to reset any unsaved changes
+    },
+    confirmDelete(user) {
+      // Use window.confirm() for a simple confirmation dialog
+      const confirmation = window.confirm(`Are you sure you want to delete user ${user.username}?`);
+      if (confirmation) {
+        this.deleteUser(user._id);
+      }
+    },
+    async deleteUser(userId) {
+      try {
+        const response = await axios.delete(`http://localhost:3000/api/users/${userId}`);
+        this.message = response.data.message; // Display success message
+        await this.fetchUsers(); // Refresh the list after deletion
+      } catch (error) {
+        this.error = 'Error deleting user. Please try again.';
+      }
     }
   }
 };
@@ -122,13 +142,29 @@ input {
   color: lightslategray;
 }
 button {
-
   margin-left: 10px;
   padding: 5px 10px;
   font-size: 0.8rem;
-}
-button:hover {
-  background-color: cadetblue;
+
+  &:hover {
+    background-color: cadetblue;
+  }
+
+  &.edit {
+    background-color: lightskyblue;
+
+    &:hover {
+      background-color: dodgerblue;
+    }
+  }
+
+  &.delete {
+    background-color: lightcoral;
+
+    &:hover {
+      background-color: firebrick;
+    }
+  }
 }
 
 .success {
