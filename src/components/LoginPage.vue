@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { authState } from '../auth'; // Import the reactive login state
+import { authState } from '@/auth'; // Import the reactive login state
 import axios from 'axios';
 
 export default {
