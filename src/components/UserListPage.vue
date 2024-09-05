@@ -14,48 +14,15 @@
             <button @click="cancelEdit">Cancel</button>
           </div>
         </div>
-        <div v-else>
-          <b>{{ user.username }}</b> - ({{ user.email }})
+        <div v-else class="user-datas">
+          <span><b>{{ user.username }}</b> - ({{ user.email }})</span>
           <button @click="editUser(user)">Edit</button>
         </div>
       </li>
-      <!--
-      <li v-for="user in users" :key="user._id">
-        <div v-if="editingUser === user._id">
-          <input v-model="user.username" placeholder="Username" />
-          <input v-model="user.email" type="email" placeholder="Email" />
-          <button @click="updateUser(user)">Save</button>
-          <button @click="cancelEdit">Cancel</button>
-        </div>
-        <div v-else>
-          <b>{{ user.username }}</b> - ({{ user.email }})
-          <button @click="editUser(user)">Edit</button>
-        </div>
-      </li>
-      -->
     </ul>
     <p v-else>Aucun compte trouvé.</p>
     <p v-if="error" class="error">{{ error }}</p>
     <p v-if="success" class="success">{{ success }}</p>
-    <!-- Edit User Form -->
-<!--
-    <div v-if="selectedUser" class="edit-form">
-      <h3>Edit User: {{ selectedUser.username }}</h3>
-      <form @submit.prevent="updateUser">
-        <div>
-          <label for="username">Nom d'utilisateur:</label>
-          <input v-model="selectedUser.username" type="text" id="username" required />
-        </div>
-        <div>
-          <label for="email">Email:</label>
-          <input v-model="selectedUser.email" type="email" id="email" required />
-        </div>
-        <button type="submit">Update</button>
-        <button type="button" @click="cancelEdit">Cancel</button>
-      </form>
-
-    </div>
-  -->
   </div>
 </template>
 
@@ -136,7 +103,8 @@ li {
   justify-content: space-between;
 }
 
-.edit-form {
+.edit-form,
+.user-datas {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -161,7 +129,7 @@ button:hover {
   background-color: cadetblue;
 }
 
-.message {
+.success {
   color: green;
   margin-top: 10px;
 }
