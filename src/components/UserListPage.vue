@@ -1,6 +1,10 @@
 <template>
   <div class="user-list-container">
     <h2>Tous les utilisateurs</h2>
+    <div>
+      <p v-if="error" class="error">{{ error }}</p>
+      <p v-if="success" class="success">{{ success }}</p>
+    </div>
     <ul v-if="users.length">
       <li v-for="user in users" :key="user._id">
         <!-- Editing mode -->
@@ -15,14 +19,12 @@
           </div>
         </div>
         <div v-else class="user-datas">
-          <span><b>{{ user.username }}</b> - ({{ user.email }})</span>
+          <span><b>{{ user.username }}</b> - {{ user.email }}</span>
           <button @click="editUser(user)">Edit</button>
         </div>
       </li>
     </ul>
     <p v-else>Aucun compte trouvé.</p>
-    <p v-if="error" class="error">{{ error }}</p>
-    <p v-if="success" class="success">{{ success }}</p>
   </div>
 </template>
 
@@ -57,22 +59,23 @@ export default {
       // eslint-disable-next-line
       this.editingUser = user._id; // Set the user being edited
       this.userEdit = { username: user.username, email: user.email }; // Copy the user data to userEdit
-      this.message = '';
+      this.success = '';
       this.error = '';
     },
     async updateUser(userId) {
       try {
+        // eslint-disable-next-line
         const response = await axios.put(`http://localhost:3000/api/users/${userId}`, {
           username: this.userEdit.username,
           email: this.userEdit.email
         });
-        this.message = `User ${response.data.username} updated successfully.`;
+        this.success = `Modification du compte de ${this.userEdit.username} réussie !`;
         this.editingUser = null; // Stop editing mode
         await this.fetchUsers(); // Refresh the list
       } catch (error) {
         this.error = error.response && error.response.data && error.response.data.message
             ? error.response.data.message
-            : 'Error updating user.';
+            : 'Erreur lors de la modification.';
       }
     },
     cancelEdit() {
@@ -130,11 +133,15 @@ button:hover {
 }
 
 .success {
+  background-color: lightgoldenrodyellow;
   color: green;
   margin-top: 10px;
+  padding: 15px 20px;
 }
 .error {
+  background-color: pink;
   color: red;
   margin-top: 10px;
+  padding: 15px 20px;
 }
 </style>
