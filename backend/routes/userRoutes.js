@@ -6,12 +6,48 @@ const router = express.Router();
 // Route to get all users
 router.get('/api/users', async (req, res) => {
     try {
-        // Fetch all users from the database, selecting only the fields you want to expose
-        const users = await User.find({}, 'email'); // This example only exposes the email field
+        // Fetch all users from the database, selecting username and email
+        const users = await User.find({}, 'username email');
         res.json(users); // Send the list of users back to the client
     } catch (error) {
         console.error('Error fetching users:', error);
         res.status(500).json({ message: 'Error fetching users.' });
+    }
+});
+
+// Update user information (PUT /api/users/:id)
+router.put('/api/users/:id', async (req, res) => {
+    const { username, email } = req.body;
+
+    try {
+        // Find user by ID
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Check if the new email or username is already taken by another user
+        const existingEmail = await User.findOne({ email, _id: { $ne: user._id } });
+        const existingUsername = await User.findOne({ username, _id: { $ne: user._id } });
+
+        if (existingEmail) {
+            return res.status(400).json({ message: 'Email already in use by another user.' });
+        }
+
+        if (existingUsername) {
+            return res.status(400).json({ message: 'Username already in use by another user.' });
+        }
+
+        // Update user's info
+        user.username = username || user.username;
+        user.email = email || user.email;
+
+        await user.save();
+
+        res.json({ message: 'User updated successfully.', user });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Error updating user.' });
     }
 });
 

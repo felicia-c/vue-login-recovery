@@ -3,6 +3,10 @@
     <h2>Inscription</h2>
     <form @submit.prevent="registerUser">
       <div>
+        <label for="username">Nom d'utilisateur:</label>
+        <input v-model="username" type="text" id="username" required />
+      </div>
+      <div>
         <label for="email">Email:</label>
         <input v-model="email" type="email" id="email" required />
       </div>
@@ -28,6 +32,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      username: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -38,23 +43,24 @@ export default {
   methods: {
     async registerUser() {
       if (this.password !== this.confirmPassword) {
-        this.error = "Passwords do not match.";
+        this.error = "Les mots de passe ne correspondent pas.";
         return;
       }
 
       try {
         // eslint-disable-next-line
         const response = await axios.post('http://localhost:3000/api/register', {
+          username: this.username,
           email: this.email,
           password: this.password,
         });
-        this.message = "Registration successful. Please log in.";
+        this.message = "Inscritption réussie ! Veuillez vous connecter.";
         this.error = '';
       } catch (error) {
         this.message = '';
         this.error = error.response && error.response.data && error.response.data.message
             ? error.response.data.message
-            : 'Error registering user. Please try again.';
+            : 'Une erreur est survenue. Veuillez réessayer.';
 
         console.error('Error in RegisterPage:', error);
       }
@@ -95,5 +101,16 @@ input {
   margin-top: 10px;
   padding: 8px 2px;
   display: inline-block;
+}
+
+.message {
+  background-color: darkseagreen;
+  color: green;
+  margin-top: 10px;
+  padding: 15px 20px;
+}
+.error {
+  color: red;
+  margin-top: 10px;
 }
 </style>

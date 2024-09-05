@@ -40,9 +40,10 @@ nav {
     padding-bottom: 0.3rem;
     display: flex;
     align-items: center;
+    border-bottom: 1px solid transparent;
     &:hover {
       color: cadetblue;
-      border-bottom: 1px solid cadetblue;
+      border-color: cadetblue;
       transition: color 0.3s ease-in-out;
     }
 
@@ -50,6 +51,10 @@ nav {
       font-weight: bolder;
       color: cadetblue;
       font-size: 1.2rem;
+      cursor: default;
+      &:hover {
+        border-color: transparent;
+      }
     }
   }
 }

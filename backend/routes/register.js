@@ -4,21 +4,27 @@ const User = require('../models/User');
 const router = express.Router();
 
 router.post('/api/register', async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, username } = req.body;
 
     try {
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'Email already in use.' });
+        const existingEmail = await User.findOne({ email });
+        const existingUsername = await User.findOne({ username });
+
+        if (existingEmail) {
+            return res.status(400).json({ message: 'Cet Email est déjà utilisé.' });
+        }
+
+        if (existingUsername) {
+            return res.status(400).json({ message: 'Ce nom d\'utilisateur est déjà utilisé.' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ email, password: hashedPassword });
+        const newUser = new User({ email, password: hashedPassword, username });
         await newUser.save();
 
-        res.status(201).json({ message: 'User registered successfully.' });
+        res.status(201).json({ message: 'Inscription réussie !' });
     } catch (error) {
-        res.status(500).json({ message: 'Error registering user.' });
+        res.status(500).json({ message: 'Erreur lors de l\'inscription.' });
     }
 });
 
