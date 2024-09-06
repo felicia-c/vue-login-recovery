@@ -2,27 +2,27 @@
   <div class="user-list-container">
     <h2>Tous les utilisateurs</h2>
     <div>
-      <p v-if="error" class="error">{{ error }}</p>
-      <p v-if="success" class="success">{{ success }}</p>
+      <p v-if="error" aria-label="erreur" class="error">{{ error }}</p>
+      <p v-if="success" aria-label="opération réussie" class="success">{{ success }}</p>
     </div>
     <ul v-if="users.length">
       <li v-for="user in users" :key="user._id">
         <!-- Editing mode -->
         <div v-if="editingUser === user._id" class="edit-form">
           <div>
-            <input v-model="userEdit.username" placeholder="Username" />
-            <input v-model="userEdit.email" type="email" placeholder="Email" />
+            <input v-model="userEdit.username" aria-label="modifier le nom d'utilisateur de {{ user.username }}" placeholder="Nom d'utilisateur" />
+            <input v-model="userEdit.email" type="email" aria-label="modifier l'e-mail' de {{ user.username }}" placeholder="E-mail" />
           </div>
           <div>
-            <button @click="updateUser(user._id)">Save</button>
-            <button @click="cancelEdit">Cancel</button>
+            <button @click="updateUser(user._id)" aria-label="Enregistrer les modifications" class="save">Enregistrer</button>
+            <button @click="cancelEdit" aria-label="Annuler les modifications" class="cancel">Annuler</button>
           </div>
         </div>
         <div v-else class="user-datas">
           <span><b>{{ user.username }}</b> - {{ user.email }}</span>
           <span>
-            <button @click="editUser(user)" class="edit">Modifier</button>
-            <button @click="confirmDelete(user)" class="delete">Supprimer</button>
+            <button @click="editUser(user)" aria-label="modifier les informations de {{ user.username }}" class="edit">Modifier</button>
+            <button @click="confirmDelete(user)" aria-label="supprimer le compte de {{ user.username }}" class="delete">Supprimer</button>
           </span>
 
         </div>
@@ -145,14 +145,12 @@ button {
   margin-left: 10px;
   padding: 5px 10px;
   font-size: 0.8rem;
-
   &:hover {
     background-color: cadetblue;
   }
 
   &.edit {
     background-color: lightskyblue;
-
     &:hover {
       background-color: dodgerblue;
     }
@@ -160,9 +158,22 @@ button {
 
   &.delete {
     background-color: lightcoral;
-
     &:hover {
       background-color: firebrick;
+    }
+  }
+
+  &.save {
+    background-color: darkseagreen;
+    &:hover {
+      background-color: seagreen;
+    }
+  }
+
+  &.cancel {
+    background-color: indianred;
+    &:hover {
+      background-color: crimson;
     }
   }
 }
