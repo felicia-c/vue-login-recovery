@@ -25,8 +25,7 @@
 <script>
 import { authState } from './auth';
 import axios from "axios"; // Import the reactive login state
-// Load environment variables from .env file (if using dotenv)
-// require('dotenv').config();
+const BASE_URL = process.env.VUE_APP_BASE_URL;
 export default {
   name: 'App',
   data() {
@@ -43,19 +42,7 @@ export default {
     authState() {
       return authState; // Use the reactive login state
     },
-    /*
-    baseUrl() {
-      // const BASE_URL_DEV = process.env.BASE_URL_DEV
-      // const BASE_URL_PROD = process.env.BASE_URL_PROD
-      return process.env.NODE_ENV === 'development'
-          ? process.env.BASE_URL_DEV
-          : process.env.BASE_URL_PROD;
-    },
-     */
     profilePictureUrl() {
-       console.log(authState.user)
-      // eslint-disable-next-line no-unused-vars
-      // const baseUrl = process.env.VUE_APP_BASE_URL
       // If the user has a profile picture, dynamically build the URL, else use default
       return authState.user.profilePicture
           ? process.env.VUE_APP_BASE_URL + 'uploads/' + authState.user.profilePicture
@@ -80,10 +67,10 @@ export default {
     async fetchUserProfile() {
       try {
         // Simulate an API request to fetch the user data (including profilePicture)
-        const response = await axios.get('${process.env.VUE_APP_BASE_URL}api/me');
+        const response = await axios.get(`${BASE_URL}api/me`);
         this.user = response.data; // Assign the response data to the user object
       } catch (error) {
-        console.error('Error fetching user profile:', error);
+        console.error('Erreur lors de la récupération des données:', error);
       }
     }
   },

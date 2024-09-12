@@ -46,21 +46,21 @@ Create a .env file in the root directory and configure the following environment
 VUE_APP_BASE_URL=http://localhost:3000/
 
 # MongoDB connection string
-MONGODB_URI=mongodb://localhost:27017/vue-auth
+VUE_APP_MONGODB_URI=mongodb://localhost:27017/vue-auth
 
 # JWT secret key
-JWT_SECRET=your_jwt_secret
+VUE_APP_JWT_SECRET=your_jwt_secret
 
 # Server port
-PORT=3000
+VUE_APP_PORT=3000
 
 #Password reset email
-PASSWORD_RESET_SENDER=passwordreset@yourdomain.com
+VUE_APP_PASSWORD_RESET_SENDER=passwordreset@yourdomain.com
 
 #Nodemailer credentials (mail client account credentials)
-EMAIL_SERVICE='Gmail'
-YOUR_EMAIL=your-email@gmail.com
-YOUR_EMAIL_PWD=your-email-password
+VUE_APP_EMAIL_SERVICE='Gmail'
+VUE_APP_YOUR_EMAIL=your-email@gmail.com
+VUE_APP_YOUR_EMAIL_PWD=your-email-password
 ```
 ### Start the Application
 #### Start the Backend Server

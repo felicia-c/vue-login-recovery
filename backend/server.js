@@ -21,7 +21,7 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded data
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/vue-auth-app')
+mongoose.connect(process.env.VUE_APP_MONGODB_URI || 'mongodb://localhost/vue-auth-app')
     .then(() => console.log('MongoDB connected...'))
     .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -32,7 +32,7 @@ app.use(userRoutes); // Routes for user management
 app.use(userRegister); // Routes for register new user
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.VUE_APP_PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

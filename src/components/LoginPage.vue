@@ -21,7 +21,7 @@
 <script>
 import { authState } from '@/auth'; // Import the reactive login state
 import axios from 'axios';
-
+const BASE_URL = process.env.VUE_APP_BASE_URL;
 export default {
   data() {
     return {
@@ -33,7 +33,7 @@ export default {
   methods: {
     async loginUser() {
       try {
-        const response = await axios.post('http://localhost:3000/api/login', {
+        const response = await axios.post(`${BASE_URL}api/login`, {
           email: this.email,
           password: this.password,
         });

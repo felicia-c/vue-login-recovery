@@ -64,8 +64,8 @@ export default {
         const response = await axios.get(`${BASE_URL}api/users`);
         this.users = response.data;
       } catch (error) {
-        console.error('Error fetching users:', error);
-        this.error = 'Error fetching users.';
+        console.error('Erreur lors de la récupération des utilisateurs :', error);
+        this.error = 'Erreur lors de la récupération des utilisateurs.';
       }
     },
     editUser(user) {
@@ -86,7 +86,7 @@ export default {
         if (this.selectedFile) {
           formData.append('profilePicture', this.selectedFile); // Append the image file if selected
         } else {
-          console.log('No file selected');
+          console.log('Aucun fichier selectionné');
         }
 
         console.log('FormData:', formData); // Debugging: Check if FormData is constructed correctly
@@ -117,7 +117,7 @@ export default {
     },
     confirmDelete(user) {
       // Use window.confirm() for a simple confirmation dialog
-      const confirmation = window.confirm(`Are you sure you want to delete user ${user.username}?`);
+      const confirmation = window.confirm(`Êtes-vous sûr•e de vouloir supprimer le compte de ${user.username} ?`);
       if (confirmation) {
         this.deleteUser(user._id);
       }
@@ -128,7 +128,7 @@ export default {
         this.message = response.data.message; // Display success message
         await this.fetchUsers(); // Refresh the list after deletion
       } catch (error) {
-        this.error = 'Error deleting user. Please try again.';
+        this.error = 'Erreur lors de la suppression du compte. Veuillez réessayer.';
       }
     },
     // Dynamically build the URL for the user's profile picture or use the default

@@ -32,8 +32,8 @@ router.get('/api/users', async (req, res) => {
         const users = await User.find({}, 'username email profilePicture');
         res.json(users); // Send the list of users back to the client
     } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ message: 'Error fetching users.' });
+        console.error('Erreur lors de la récupération des utilisateurs:', error);
+        res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs.' });
     }
 });
 // get the connected user
@@ -44,11 +44,11 @@ const authMiddleware = (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.VUE_APP_JWT_SECRET);
         req.user = decoded; // Attach the decoded user info to req
         next();
     } catch (err) {
-        res.status(401).json({ message: 'Authentication failed.' });
+        res.status(401).json({ message: 'Connexion échouée.' });
     }
 };
 
@@ -59,7 +59,7 @@ router.get('/api/me', authMiddleware, async (req, res) => {
         const user = await User.findById(req.user._id);
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Utilisateur introuvable' });
         }
 
         // Send user data back to the frontend (including profilePicture)
@@ -69,7 +69,7 @@ router.get('/api/me', authMiddleware, async (req, res) => {
             profilePicture: user.profilePicture, // Assuming this is the stored image path
         });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching user data.' });
+        res.status(500).json({ message: 'Erreur lors de l\'affichage des données.' });
     }
 });
 
@@ -81,7 +81,7 @@ router.put('/api/users/:id', upload.single('profilePicture'), async (req, res) =
         // Find user by ID
         const user = await User.findById(req.params.id);
         if (!user) {
-            return res.status(404).json({ message: 'User not found.' });
+            return res.status(404).json({ message: 'Utilisateur introuvable.' });
         }
 
         // Check if the new email or username is already taken by another user
@@ -105,10 +105,10 @@ router.put('/api/users/:id', upload.single('profilePicture'), async (req, res) =
 
         await user.save();
 
-        res.json({ message: 'User updated successfully.', user });
+        res.json({ message: 'Utilisateur mis à jour.', user });
     } catch (error) {
-        console.error('Error updating user:', error);
-        res.status(500).json({ message: 'Error updating user.' });
+        console.error('Erreur lors de la suppression du comte utilisateur:', error);
+        res.status(500).json({ message: 'Erreur lors de la mise à jour du compte' });
     }
 });
 
@@ -118,13 +118,13 @@ router.delete('/api/users/:id', async (req, res) => {
         const user = await User.findByIdAndDelete(req.params.id);
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Utilisateur introuvable' });
         }
 
-        res.json({ message: `User ${user.username} deleted successfully.` });
+        res.json({ message: `Utilisateur ${user.username} supprimé.` });
     } catch (error) {
-        console.error('Error deleting user:', error);
-        res.status(500).json({ message: 'Error deleting user.' });
+        console.error('Erreur lors de la suppression du compte:', error);
+        res.status(500).json({ message: 'Erreur lors de la suppression du compte.' });
     }
 });
 

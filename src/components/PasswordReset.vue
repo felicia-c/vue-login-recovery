@@ -14,7 +14,7 @@
 
 <script>
 import axios from 'axios';
-
+const BASE_URL = process.env.VUE_APP_BASE_URL;
 export default {
   data() {
     return {
@@ -25,7 +25,7 @@ export default {
     async resetPassword() {
       try {
         const token = this.$route.params.token;
-        const response = await axios.post(`http://localhost:3000/api/reset-password/${token}`, { password: this.password });
+        const response = await axios.post(`${BASE_URL}api/reset-password/${token}`, { password: this.password });
         alert(response.data.message);
         this.$router.push('/login');
       } catch (error) {

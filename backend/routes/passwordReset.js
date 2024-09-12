@@ -16,7 +16,7 @@ router.post('/api/request-password-reset', async (req, res) => {
         // Find the user by email
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'No account with that email exists.' });
+            return res.status(400).json({ message: 'AUcun compte n\'est associé à cet e-mail' });
         }
 
         // Generate a reset token and set expiration
@@ -25,9 +25,9 @@ router.post('/api/request-password-reset', async (req, res) => {
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour from now
 
         await user.save();
-        const AUTH_EMAIL = process.env.YOUR_EMAIL;
-        const AUTH_PWD = process.env.YOUR_EMAIL_PWD;
-        const EMAIL_SERVICE = process.env.EMAIL_SERVICE || 'Gmail';
+        const AUTH_EMAIL = process.env.VUE_APP_YOUR_EMAIL;
+        const AUTH_PWD = process.env.VUE_APP_YOUR_EMAIL_PWD;
+        const EMAIL_SERVICE = process.env.VUE_APP_EMAIL_SERVICE || 'Gmail';
         // Send email with token
         const transporter = nodemailer.createTransport({
             service: EMAIL_SERVICE,
@@ -76,10 +76,10 @@ router.post('/api/reset-password/:token', async (req, res) => {
 
         await user.save();
 
-        res.json({ message: 'Password has been successfully reset.' });
+        res.json({ message: 'Mot de passe réinitialisé' });
     } catch (error) {
         console.error('Error in reset-password route:', error);
-        res.status(500).json({ message: 'An error occurred while resetting your password.' });
+        res.status(500).json({ message: 'Une erreur est survenue lors de la réinitialisation du mot de passe.' });
     }
 });
 

@@ -28,7 +28,7 @@
 
 <script>
 import axios from 'axios';
-
+const BASE_URL = process.env.VUE_APP_BASE_URL;
 export default {
   data() {
     return {
@@ -49,7 +49,7 @@ export default {
 
       try {
         // eslint-disable-next-line
-        const response = await axios.post('http://localhost:3000/api/register', {
+        const response = await axios.post(`${BASE_URL}api/register`, {
           username: this.username,
           email: this.email,
           password: this.password,

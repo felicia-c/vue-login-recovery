@@ -19,7 +19,8 @@ router.post('/api/login', async (req, res) => {
         }
 
         // Create a token
-        const token = jwt.sign({ id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
+        const JWT_SECRET = process.env.VUE_APP_JWT_SECRET;
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
         res.json({ token, user: { id: user._id, email: user.email, username: user.username, profilePicture: user.profilePicture } });
     } catch (error) {

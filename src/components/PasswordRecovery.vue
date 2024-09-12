@@ -16,7 +16,7 @@
 
 <script>
 import axios from 'axios';
-
+const BASE_URL = process.env.VUE_APP_BASE_URL;
 export default {
   data() {
     return {
@@ -29,7 +29,7 @@ export default {
     async recoverPassword() {
       try {
         // eslint-disable-next-line
-        const response = await axios.post('http://localhost:3000/api/request-password-reset', { email: this.email });
+        const response = await axios.post(`${BASE_URL}api/request-password-reset`, { email: this.email });
         this.message = `Un e-mail à été envoyé à ${this.email} avec la procédure à suivre.`;
         this.error = '';  // Clear any previous error message
       } catch (error) {
