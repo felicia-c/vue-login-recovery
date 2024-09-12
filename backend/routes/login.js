@@ -21,7 +21,7 @@ router.post('/api/login', async (req, res) => {
         // Create a token
         const token = jwt.sign({ id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
 
-        res.json({ token, user: { id: user._id, email: user.email, username: user.username } });
+        res.json({ token, user: { id: user._id, email: user.email, username: user.username, profilePicture: user.profilePicture } });
     } catch (error) {
         res.status(500).json({ message: 'Erreur serveur. Veuillez réessayer ultérieurement.' });
     }

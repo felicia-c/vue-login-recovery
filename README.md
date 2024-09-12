@@ -40,8 +40,11 @@ or
 npm install
 ```
 ### Configure Environment Variables
-Create a .env file in the backend directory and configure the following environment variables:
+Create a .env file in the root directory and configure the following environment variables:
 ```
+# Development environment variables
+VUE_APP_BASE_URL=http://localhost:3000/
+
 # MongoDB connection string
 MONGODB_URI=mongodb://localhost:27017/vue-auth
 

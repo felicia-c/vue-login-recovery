@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         trim: true,
     },
+    profilePicture: {
+        type: String,
+        default: '/img/default-profile.png'
+    },
     resetPasswordToken: {
         type: String,
     },

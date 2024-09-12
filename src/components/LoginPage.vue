@@ -41,11 +41,13 @@ export default {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('username', response.data.user.username);
         localStorage.setItem('email', response.data.user.email);
+        localStorage.setItem('profilePicture', response.data.user.profilePicture);
 
         // Update the reactive login state
         authState.isLoggedIn = true;
         authState.user.username = response.data.user.username;
         authState.user.email = response.data.user.email;
+        authState.user.profilePicture = response.data.user.profilePicture;
 
         this.error = '';
         alert(`Connecté•e en tant que ${this.email}`);

@@ -11,6 +11,9 @@
     "async": "^3.2.6",
     "axios": "^1.7.4",
     "core-js": "^3.8.3",
+    "idna-uts46-hx": "^6.0.5",
+    "multer": "^1.4.5-lts.1",
+    "punycode": "^2.3.1",
     "vue": "^3.2.13"
   },
   "devDependencies": {

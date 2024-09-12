@@ -7,9 +7,14 @@
         <!-- Show "Log in" if the user is not logged in -->
         <router-link v-if="!authState.isLoggedIn" to="/login" class="login">Connexion</router-link>
         <!-- Show "Log out" if the user is logged in -->
-        <div v-if="authState.isLoggedIn">
+        <div v-if="authState.isLoggedIn" >
         <button @click="logout" class="logout">Se déconnecter</button>
-          <p class="username">Bienvenue <b>{{ authState.user.username }}</b> !</p>
+          <div class="user-profile">
+            <img :src="profilePictureUrl" class="navbar-profile-pic" alt="Profile Picture">
+            <p class="username">
+              <b>{{ authState.user.username }}</b>
+            </p>
+          </div>
         </div>
       </div>
     </nav>
@@ -18,14 +23,43 @@
 </template>
 
 <script>
-import { authState } from './auth'; // Import the reactive login state
-
+import { authState } from './auth';
+import axios from "axios"; // Import the reactive login state
+// Load environment variables from .env file (if using dotenv)
+// require('dotenv').config();
 export default {
   name: 'App',
+  data() {
+    return {
+      user: {
+        profilePicture: '',
+        username: '',
+      },
+       defaultProfilePic: '/img/default-profile.png' // Fallback image
+    };
+  },
   computed: {
     // Check if the user is logged in by looking for the token in localStorage
     authState() {
       return authState; // Use the reactive login state
+    },
+    /*
+    baseUrl() {
+      // const BASE_URL_DEV = process.env.BASE_URL_DEV
+      // const BASE_URL_PROD = process.env.BASE_URL_PROD
+      return process.env.NODE_ENV === 'development'
+          ? process.env.BASE_URL_DEV
+          : process.env.BASE_URL_PROD;
+    },
+     */
+    profilePictureUrl() {
+       console.log(authState.user)
+      // eslint-disable-next-line no-unused-vars
+      // const baseUrl = process.env.VUE_APP_BASE_URL
+      // If the user has a profile picture, dynamically build the URL, else use default
+      return authState.user.profilePicture
+          ? process.env.VUE_APP_BASE_URL + 'uploads/' + authState.user.profilePicture
+          : this.defaultProfilePic;
     }
   },
   methods: {
@@ -34,12 +68,28 @@ export default {
       localStorage.removeItem('token');
       localStorage.removeItem('username');
       localStorage.removeItem('email');
+      localStorage.removeItem('profilePicture');
 
       authState.isLoggedIn = false; // Update the reactive state
       authState.user.username = '';
       authState.user.email = '';
+      authState.user.profilePicture = '';
 
       this.$router.push('/login'); // Redirect to the login page
+    },
+    async fetchUserProfile() {
+      try {
+        // Simulate an API request to fetch the user data (including profilePicture)
+        const response = await axios.get('${process.env.VUE_APP_BASE_URL}api/me');
+        this.user = response.data; // Assign the response data to the user object
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    }
+  },
+  mounted() {
+    if (this.isLoggedIn) {
+      this.fetchUserProfile(); // Fetch user data (including profile picture)
     }
   }
 };
@@ -104,6 +154,19 @@ nav {
         }
       }
     }
+  }
+
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 10px;
   }
 
   .login-logout {

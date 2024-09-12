@@ -10,6 +10,10 @@
         <!-- Editing mode -->
         <div v-if="editingUser === user._id" class="edit-form">
           <div>
+            <!-- Image Upload Field -->
+            <div v-if="editingUser === user._id" class="edit-mode">
+              <input type="file" @change="onFileChange" aria-label="Upload Profile Picture" />
+            </div>
             <input v-model="userEdit.username" aria-label="modifier le nom d'utilisateur de {{ user.username }}" placeholder="Nom d'utilisateur" />
             <input v-model="userEdit.email" type="email" aria-label="modifier l'e-mail' de {{ user.username }}" placeholder="E-mail" />
           </div>
@@ -19,7 +23,10 @@
           </div>
         </div>
         <div v-else class="user-datas">
-          <span><b>{{ user.username }}</b> - {{ user.email }}</span>
+          <span><!-- Display profile picture -->
+            <img :src="userProfilePictureUrl(user)" class="profile-pic" alt="Profile Picture">
+            <span class="username">{{ user.username }}</span>  {{ user.email }}
+          </span>
           <span>
             <button @click="editUser(user)" aria-label="modifier les informations de {{ user.username }}" class="edit">Modifier</button>
             <button @click="confirmDelete(user)" aria-label="supprimer le compte de {{ user.username }}" class="delete">Supprimer</button>
@@ -34,13 +41,15 @@
 
 <script>
 import axios from 'axios';
-
+const BASE_URL = process.env.VUE_APP_BASE_URL;
 export default {
   data() {
     return {
       users: [],
       editingUser: null, // Track which user is being edited
-      userEdit: { username: '', email: '' }, // Track user data being edited
+      userEdit: { username: '', email: '', profilePicture: '' }, // Track user data being edited
+      selectedFile: null, // Track selected image file
+      defaultProfilePic: '/img/default-profile.png', // Fallback image
       error: '',
       success: '',
     };
@@ -52,7 +61,7 @@ export default {
     async fetchUsers() {
       try {
         // eslint-disable-next-line
-        const response = await axios.get('http://localhost:3000/api/users');
+        const response = await axios.get(`${BASE_URL}api/users`);
         this.users = response.data;
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -62,17 +71,31 @@ export default {
     editUser(user) {
       // eslint-disable-next-line
       this.editingUser = user._id; // Set the user being edited
-      this.userEdit = { username: user.username, email: user.email }; // Copy the user data to userEdit
+      this.userEdit = { username: user.username, email: user.email, profilePicture: user.profilePicture }; // Copy the user data to userEdit
       this.success = '';
       this.error = '';
+      //console.log(this.userEdit.username)
     },
     async updateUser(userId) {
       try {
-        // eslint-disable-next-line
-        const response = await axios.put(`http://localhost:3000/api/users/${userId}`, {
-          username: this.userEdit.username,
-          email: this.userEdit.email
+        const formData = new FormData();
+
+        formData.append('username', this.userEdit.username);
+        formData.append('email', this.userEdit.email);
+
+        if (this.selectedFile) {
+          formData.append('profilePicture', this.selectedFile); // Append the image file if selected
+        } else {
+          console.log('No file selected');
+        }
+
+        console.log('FormData:', formData); // Debugging: Check if FormData is constructed correctly
+
+        // eslint-disable-next-line no-unused-vars
+        const response = await axios.put(`${BASE_URL}api/users/${userId}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
         });
+
         this.success = `Modification du compte de ${this.userEdit.username} réussie !`;
         this.editingUser = null; // Stop editing mode
         await this.fetchUsers(); // Refresh the list
@@ -82,10 +105,15 @@ export default {
             : 'Erreur lors de la modification.';
       }
     },
+
     cancelEdit() {
       this.editingUser = null; // Cancel edit mode
-      this.userEdit = { username: '', email: '' }; // Reset the edit form
+      this.userEdit = { username: '', email: '', profilePicture: '' }; // Reset the edit form
       this.fetchUsers(); // Re-fetch users to reset any unsaved changes
+    },
+    onFileChange(event) {
+      this.selectedFile = event.target.files[0]; // Store the selected file
+      console.log('Selected file:', this.selectedFile); // Debugging: Check if the file is correctly selected
     },
     confirmDelete(user) {
       // Use window.confirm() for a simple confirmation dialog
@@ -96,12 +124,19 @@ export default {
     },
     async deleteUser(userId) {
       try {
-        const response = await axios.delete(`http://localhost:3000/api/users/${userId}`);
+        const response = await axios.delete(`${BASE_URL}api/users/${userId}`);
         this.message = response.data.message; // Display success message
         await this.fetchUsers(); // Refresh the list after deletion
       } catch (error) {
         this.error = 'Error deleting user. Please try again.';
       }
+    },
+    // Dynamically build the URL for the user's profile picture or use the default
+    userProfilePictureUrl(user) {
+      // Return the user's profile picture URL or the default profile picture
+      return user.profilePicture
+          ? BASE_URL + 'uploads/' + user.profilePicture
+          : this.defaultProfilePic;
     }
   }
 };
@@ -134,6 +169,19 @@ li {
   align-items: center;
   width: 100%;
 }
+.user-datas > span {
+  display: flex;
+  align-items: center;
+}
+.profile-pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+
 input {
   margin-right: 20px;
   padding:5px 10px;
@@ -176,6 +224,11 @@ button {
       background-color: crimson;
     }
   }
+}
+
+.username {
+  font-weight: bold;
+  margin-right: 1rem;
 }
 
 .success {
